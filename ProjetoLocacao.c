@@ -15,19 +15,6 @@ typedef struct {
 
 typedef struct {
   int codigo;
-  char fabricante[50];
-  char modelo[50];
-  char tipo[50];
-  char cor[20];
-  char tipoCombustivel[20];
-  int ano;
-  float valorDia;
-  float despesaDia;
-  char status;
-} VEICULO;
-
-typedef struct {
-  int codigo;
   char nome[80];
   char data_nasc[40];
   char cpf[50];
@@ -38,6 +25,19 @@ typedef struct {
   int qtdLocacoes;
   float valorTotal;
 } CLIENTE;
+
+typedef struct {
+  int codigo;
+  char fabricante[50];
+  char modelo[50];
+  char tipo[50];
+  char cor[20];
+  char tipoCombustivel[20];
+  int ano;
+  float valorDia;
+  float despesaDia;
+  char status;
+} VEICULO;
 
 typedef struct {
   CLIENTE cliente;
@@ -63,7 +63,7 @@ typedef struct {
   int qtd;
 } Lista;
 
-void inicializarListaCliente(Lista *C) {
+void criarListaCliente(Lista *C) {
   C->prim = (ponteiro)malloc(sizeof(Caixa));
   C->ult = C->prim;
   C->prim->prox = NULL;
@@ -132,7 +132,7 @@ void cadastrarCliente(CLIENTE *C) {
   C->codigo = ++codCliente;
 }
 
-void imprimirCliente(CLIENTE C) {
+void exibirCliente(CLIENTE C) {
   printf("\nDADOS DO CLIENTE\n\n");
   fflush(stdin);
   printf("\nCODIGO DO CLIENTE: %d", C.codigo);
@@ -188,6 +188,39 @@ void inserirVeiculo(ListaVeiculo *lv, VEICULO veic) {
     lv->ult = q;
 }
 
+void removerVeiculo(ListaVeiculo *lv, VEICULO *V) {
+  v p, q;
+  p = lv->prim;
+  while ((p != lv->ult) && (V->codigo > p->prox->veiculo.codigo))
+    p = p->prox;
+  if ((p == lv->ult) || (V->codigo != p->prox->veiculo.codigo)) {
+    printf("\n O veículo procurado não está na lista!\n");
+    strcpy(V->modelo, "Ninguém");
+  } else {
+    q = p->prox;
+    *V = q->veiculo;
+    p->prox = q->prox;
+    if (q == lv->ult)
+      lv->ult = p;
+    lv->qtd--;
+    free(q);
+  }
+}
+
+void exibirVeiculo(VEICULO V) {
+  printf("\n ========================== %3d =======================", V.codigo);
+  printf("\n == FABRICANTE: %50s                                 ==", V.fabricante);
+  printf("\n == MODELO: %50s                                     ==", V.modelo);
+  printf("\n == TIPO: %50s                                       ==", V.tipo);
+  printf("\n == COR: %20s                                        ==", V.cor);
+  printf("\n == TIPO DE COMBUSTÍVEL: %20s                        ==", V.tipoCombustivel);
+  printf("\n == ANO: %d                                          ==", V.ano);
+  printf("\n == ALUGUEL POR DIA: %.2f                            ==", V.valorDia);
+  printf("\n == DESPESA POR DIA: %.2f                            ==", V.despesaDia);
+  printf("\n == STATUS: %.c                                      ==", V.status);
+  printf("\n ======================================================\n");
+}
+
 void cadastrarVeiculo(VEICULO *V) {
   printf("=====> CADASTRAR VEÍCULO <=====\n\n");
   printf("\nENTRE COM O FABRICANTE: ");
@@ -240,7 +273,7 @@ int main() {
   ponteiro p = NULL;
   menu();
 
-  inicializarListaCliente(&C); // testando funções
+  criarListaCliente(&C); // testando funções
 
   while (i--) {
     cadastrarCliente(&X);
@@ -250,7 +283,7 @@ int main() {
   p = C.prim;
 
   while (p != C.ult) {
-    imprimirCliente(p->prox->cli);
+    exibirCliente(p->prox->cli);
     p = p->prox;
   }
   printf("\n FINAL DA LISTA\n ");

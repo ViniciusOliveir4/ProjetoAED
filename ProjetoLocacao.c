@@ -217,7 +217,7 @@ void exibirVeiculo(VEICULO V) {
   printf("\n == ANO: %d                                          ==", V.ano);
   printf("\n == ALUGUEL POR DIA: %.2f                            ==", V.valorDia);
   printf("\n == DESPESA POR DIA: %.2f                            ==", V.despesaDia);
-  printf("\n == STATUS: %.c                                      ==", V.status);
+  printf("\n == STATUS: %c                                       ==", V.status);
   printf("\n ======================================================\n");
 }
 

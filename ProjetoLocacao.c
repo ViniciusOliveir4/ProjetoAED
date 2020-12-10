@@ -31,13 +31,14 @@ typedef struct{
   int codigo;
   char fabricante[50];
   char modelo[50];
+  char placa[50];
   char tipo[50];
   char cor[20];
   char tipoCombustivel[20];
   int ano;
   float valorDia;
   float despesaDia;
-  char status[10];
+  char status;
 }VEICULO;
 
 typedef struct {
@@ -88,26 +89,6 @@ void inserirCliente(ListaCliente *C, CLIENTE X) {
     C->ult = q;
 }
 
-void exibeListaCliente(ListaCliente C) {
-  pC p;
-
-  printf("\n ********");
-  printf("\n * Cab  *");
-  printf("\n * List *");
-  printf("\n ***<>***");
-  printf("\n     V   ");
-  p = C.prim->prox;
-
-  while (p != NULL) {
-    printf("\n ********");
-    printf("\n * %3d  *", p->cli.codigo);
-    printf("\n *      *");
-    printf("\n ***<>***");
-    printf("\n     V   ");
-    p = p->prox;
-  }
-}
-
 void cadastrarCliente(CLIENTE *C) {
   printf("======> CADASTRAR CLIENTE <======\n");
   printf("\nENTRE COM O NOME DO CLIENTE: ");
@@ -154,6 +135,15 @@ void exibirCliente(CLIENTE C) {
   printf("\n==================================\n");
 }
 
+void listarTodosClientes(ListaCliente LC){
+    pC c = LC.prim;
+
+    while(c != LC.ult){
+        exibirCliente(c->prox->cli);
+        c = c->prox;
+    }
+}
+
 void consultarCliente(ListaCliente C, CLIENTE X){
     pC p;
 
@@ -180,14 +170,14 @@ void removerCliente(ListaCliente *C, CLIENTE *X){
 	     p=p->prox;
 
     if((p==C->ult)||(!(strcmp(X->cpf, p->prox->cli.cpf)==0)))
-	     printf("\nCliente com o cpf %s nao encontrado!\n", X->cpf);
+	     printf("\nCLIENTE COM O CPF %s NAO ENCONTRADO!\n", X->cpf);
     else{
         int op;
         CLIENTE Y = *X;
 
         exibirCliente(Y);
         //verificação de segurança
-        printf("\nDeseja realmente remover cadastro deste cliente? \n(Digite 1 para SIM ou 2 para NAO)\n");
+        printf("\nDESEJA REALMENTE REMOVER O CADASTRO DESTE CLIENTE?\n(DIGITE 1 PARA SIM OU 2 PARA NAO)\n");
         scanf("%d", &op);
 
         if(op == 1){
@@ -198,19 +188,17 @@ void removerCliente(ListaCliente *C, CLIENTE *X){
                 C->ult=p;
             C->qtd--;
             free(q);
-            printf("\n\nCadastro de cliente removido com sucesso!\n\n");
+            printf("\n\nCADASTRO DE CLIENTE REMOVIDO COM SUCESSO!\n\n");
         }
         else
-            printf("\n\nVoltando ao Menu!\n\n");
-
-
+            printf("\n\nVOLTANDO AO MENU!\n\n");
     }
 }
 
 // Veículos
-typedef struct elementoVeiculo {
+typedef struct elemenV{
   VEICULO veiculo;
-  struct elementoVeiculo *prox;
+  struct elemenV *prox;
 } CaixaVeiculo;
 
 typedef CaixaVeiculo *pV;
@@ -243,44 +231,14 @@ void inserirVeiculo(ListaVeiculo *lv, VEICULO veic){
     lv->ult = q;
 }
 
-void removerVeiculo(ListaVeiculo *lv, VEICULO *V) {
-  pV p, q;
-  p = lv->prim;
-  while ((p != lv->ult) && (V->codigo > p->prox->veiculo.codigo))
-    p = p->prox;
-  if ((p == lv->ult) || (V->codigo != p->prox->veiculo.codigo)) {
-    printf("\n O veículo procurado não está na lista!\n");
-    strcpy(V->modelo, "Ninguém");
-  } else {
-    q = p->prox;
-    *V = q->veiculo;
-    p->prox = q->prox;
-    if (q == lv->ult)
-      lv->ult = p;
-    lv->qtd--;
-    free(q);
-  }
-}
-
-void exibirVeiculo(VEICULO V) {
-  printf("\n ========================== %3d =======================", V.codigo);
-  printf("\n == FABRICANTE: %50s                                 ==", V.fabricante);
-  printf("\n == MODELO: %50s                                     ==", V.modelo);
-  printf("\n == TIPO: %50s                                       ==", V.tipo);
-  printf("\n == COR: %20s                                        ==", V.cor);
-  printf("\n == TIPO DE COMBUSTÍVEL: %20s                        ==", V.tipoCombustivel);
-  printf("\n == ANO: %d                                          ==", V.ano);
-  printf("\n == ALUGUEL POR DIA: %.2f                            ==", V.valorDia);
-  printf("\n == DESPESA POR DIA: %.2f                            ==", V.despesaDia);
-  printf("\n == STATUS: %c                                       ==", V.status);
-  printf("\n ======================================================\n");
-}
-
 void cadastrarVeiculo(VEICULO *V) {
-  printf("=====> CADASTRAR VEÍCULO <=====\n\n");
+  printf("=====> CADASTRAR VEICULO <=====\n\n");
   printf("\nENTRE COM O FABRICANTE: ");
   fflush(stdin);
   fgets(V->fabricante, 50, stdin);
+  printf("\nENTRE COM A PLACA: ");
+  fflush(stdin);
+  fgets(V->placa, 50, stdin);
   printf("\nENTRE COM O MODELO: ");
   fflush(stdin);
   fgets(V->modelo, 50, stdin);
@@ -290,36 +248,118 @@ void cadastrarVeiculo(VEICULO *V) {
   printf("\nENTRE COM O COR: ");
   fflush(stdin);
   fgets(V->cor, 20, stdin);
-  printf("\nENTRE COM O TIPO DE COMBUSTÍVEL: ");
+  printf("\nENTRE COM O TIPO DE COMBUSTIVEL: ");
   fflush(stdin);
   fgets(V->tipoCombustivel, 20, stdin);
   printf("\nENTRE COM O ANO: ");
   fflush(stdin);
   scanf("%d", &V->ano);
-  printf("\nENTRE COM O VALOR DO ALUGUEL POR DIA DO VEÍCULO: ");
+  printf("\nENTRE COM O VALOR DO ALUGUEL POR DIA DO VEICULO: ");
   fflush(stdin);
   scanf("%f", &V->valorDia);
-  printf("\nENTRE COM A DESPESA POR DIA DO VEÍCULO: ");
+  printf("\nENTRE COM A DESPESA POR DIA DO VEICULO: ");
   fflush(stdin);
   scanf("%d", &V->despesaDia);
-  printf("\nENTRE COM O STATUS DO VEÍCULO (D = Disponível | R = Reservado | M = Em Manutenção): ");
+  printf("\nENTRE COM O STATUS DO VEICULO (D = Disponivel | R = Reservado | M = Em Manutencao): ");
   fflush(stdin);
-  fgets(V->status, 10, stdin);
+  V->status = getchar();
   printf("\n\n\n\nVEICULO CADASTRADO COM SUCESSO!\n");
   fflush(stdin);
   V->codigo = ++codVeiculo;
 }
 
+void exibirVeiculo(VEICULO V) {
+  printf("=======> DADOS DO VEICULO <=======\n\n");
+  printf("\n ========================== %3d =======================", V.codigo);
+  printf("\n == FABRICANTE: %50s                                 ==", V.fabricante);
+  printf("\n == PLACA: %50s                                      ==", V.placa);
+  printf("\n == MODELO: %50s                                     ==", V.modelo);
+  printf("\n == TIPO: %50s                                       ==", V.tipo);
+  printf("\n == COR: %20s                                        ==", V.cor);
+  printf("\n == TIPO DE COMBUSTIVEL: %20s                        ==", V.tipoCombustivel);
+  printf("\n == ANO: %d                                          ==", V.ano);
+  printf("\n == ALUGUEL POR DIA: %.2f                            ==", V.valorDia);
+  printf("\n == DESPESA POR DIA: %.2f                            ==", V.despesaDia);
+  printf("\n == STATUS: %c                                       ==", V.status);
+  printf("\n ======================================================\n");
+}
+
+void listarTodosVeiculos(ListaVeiculo LV){
+    pV c = LV.prim;
+
+    while(c != LV.ult){
+        exibirVeiculo(c->prox->veiculo);
+        c = c->prox;
+    }
+}
+
+void consultarVeiculo(ListaVeiculo LV, VEICULO X){
+    pV p;
+
+    p=LV.prim;
+
+    //buscar veiculo passando a placa por parametro
+    while ((p!=LV.ult)&&( !(strcmp(X.placa, p->prox->veiculo.placa)==0)))
+	     p=p->prox;
+
+    if((p==LV.ult)||(!(strcmp(X.placa, p->prox->veiculo.placa)==0)))
+	     printf("\nVEICULO COM A PLACA %s NAO ENCONTRADO!\n", X.placa);
+    else
+        exibirVeiculo(p->prox->veiculo);
+}
+
+void removerVeiculo(ListaVeiculo *LV, VEICULO *X){
+    pV p, q;
+    p=LV->prim;
+
+    //buscar cliente passando cpf por parametro
+    while ((p!=LV->ult)&&( !(strcmp(X->placa, p->prox->veiculo.placa)==0)))
+	     p=p->prox;
+
+    if((p==LV->ult)||(!(strcmp(X->placa, p->prox->veiculo.placa)==0)))
+	     printf("\nVEICULO COM A PLACA %s NAO ENCONTRADO!\n", X->placa);
+    else{
+        if(p->prox->veiculo.status == 'D'){
+
+            int op;
+            VEICULO Y = *X;
+
+            exibirVeiculo(Y);
+            //verificação de segurança
+            printf("\nDESEJA REALMENTE REMOVER O CADASTRO DESTE VEICULO?\n(DIGITE 1 PARA SIM OU 2 PARA NAO)\n");
+            scanf("%d", &op);
+
+            if(op == 1){
+                q=p->prox;
+                *X = q->veiculo;
+                p->prox=q->prox;
+                if(q==LV->ult)
+                    LV->ult=p;
+                LV->qtd--;
+                free(q);
+                printf("\n\nCADASTRO DE VEICULO REMOVIDO COM SUCESSO!\n\n");
+            }
+            else{
+                printf("\n\nVOLTANDO AO MENU!\n\n");
+            }
+        }
+        else{
+            printf("\n\nNAO EH POSSIVEL REMOVER VEICULO COM STATUS R(Reservado) OU M(Manutencao)\n\n");
+        }
+
+    }
+}
+
 void menu() {
-  printf("***** SEJA BEM-VINDO! *****\n\n");
+  printf("=====> SEJA BEM-VINDO! <=====\n\n");
   printf("\tMENU\n\n");
   printf("1 - GERENCIAR CLIENTES\n");
-  printf("2 - GERENCIAR VEÍCULOS\n");
-  printf("3 - GERENCIAR LOCAÇÕES\n");
-  printf("4 - GERENCIAR MANUTENÇÃO\n");
-  printf("5 - PREVISÃO DE FATURAMENTO\n");
+  printf("2 - GERENCIAR VEICULOS\n");
+  printf("3 - GERENCIAR LOCACOES\n");
+  printf("4 - GERENCIAR MANUTENCAO\n");
+  printf("5 - PREVISAO DE FATURAMENTO\n");
   printf("6 - SAIR\n");
-  printf("\nENTRE COM A OPÇÃO DESEJADA: ");
+  printf("\nENTRE COM A OPCAO DESEJADA: ");
 }
 
 int main() {
@@ -327,39 +367,46 @@ int main() {
     CLIENTE X;
     VEICULO Z;
     ListaCliente LC;
-    ListaVeiculo lv;
+    ListaVeiculo LV;
     int i = 2;
     pV v = NULL;
     pC c = NULL;
 
     criarListaCliente(&LC);
-    //criarListaVeiculo(&lv);
+    criarListaVeiculo(&LV);
 
 
     // testando funções
     while(i--){
-        cadastrarCliente(&X);
-        inserirCliente(&LC, X);
-        //cadastrarVeiculo(&Z);
-        //inserirVeiculo(&lv, Z);
+        //cadastrarCliente(&X);
+        //inserirCliente(&LC, X);
+        cadastrarVeiculo(&Z);
+        inserirVeiculo(&LV, Z);
     }
 
-      /*v = lv.prim;
+    printf("\nInforme a placa que deseja consultar: ");
+    fflush(stdin);
+    fgets(Z.placa, 50, stdin);
+    consultarVeiculo(LV, Z);
 
-      while (v != lv.ult) {
-        exibirVeiculo(v->prox->veiculo);
-        v = v->prox;
-        //p = p->prox;
-        //exibirCliente
-      }
-      printf("\n FINAL DA LISTA\n ");
-
-      removerVeiculo(&lv, &Z);*/
+    printf("\nInforme a placa do veiculo que deseja remover: ");
+    fflush(stdin);
+    fgets(Z.placa, 50, stdin);
+    removerVeiculo(&LV, &Z);
 
 
+    printf("\nInforme a placa do veiculo que deseja remover: ");
+    fflush(stdin);
+    fgets(Z.placa, 50, stdin);
+    removerVeiculo(&LV, &Z);
+
+    listarTodosVeiculos(LV);
 
 
-    printf("\nInforme o cpf que deseja consultar: ");
+
+
+
+    /*printf("\nInforme o cpf que deseja consultar: ");
     fflush(stdin);
     fgets(X.cpf, 50, stdin);
     consultarCliente(LC, X);
@@ -369,13 +416,9 @@ int main() {
     fgets(X.cpf, 50, stdin);
     removerCliente(&LC, &X);
 
-    fflush(stdin);
-    c = LC.prim;
 
-    while(c != LC.ult){
-        exibirCliente(c->prox->cli);
-        c = c->prox;
-    }
+
+    listarTodosClientes(LC);*/
 
 
     return (0);

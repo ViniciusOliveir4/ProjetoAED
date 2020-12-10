@@ -36,7 +36,7 @@ typedef struct {
   int ano;
   float valorDia;
   float despesaDia;
-  char status;
+  char status[1];
 } VEICULO;
 
 typedef struct {
@@ -217,7 +217,7 @@ void exibirVeiculo(VEICULO V) {
   printf("\n == ANO: %d                                          ==", V.ano);
   printf("\n == ALUGUEL POR DIA: %.2f                            ==", V.valorDia);
   printf("\n == DESPESA POR DIA: %.2f                            ==", V.despesaDia);
-  printf("\n == STATUS: %c                                       ==", V.status);
+  printf("\n == STATUS: %c                                       ==", V.status[1]);
   printf("\n ======================================================\n");
 }
 
@@ -243,15 +243,64 @@ void cadastrarVeiculo(VEICULO *V) {
   printf("\nENTRE COM O VALOR DO ALUGUEL POR DIA DO VEÍCULO: ");
   scanf("%f", &V->valorDia);
   printf("\nENTRE COM A DESPESA POR DIA DO VEÍCULO: ");
-  scanf("%d", &V->despesaDia);
-  printf("\nENTRE COM O STATUS DO VEÍCULO (D = Disponível | R = Reservado | M "
-         "= Em Manutenção): ");
+  scanf("%f", &V->despesaDia);
+  printf("\nENTRE COM O STATUS DO VEÍCULO (D = Disponível | R = Reservado | M = Em Manutenção): ");
   fflush(stdin);
   fgets(V->status, 1, stdin);
   printf("\n\n\n\nVEICULO CADASTRADO COM SUCESSO!\n");
   fflush(stdin);
   V->codigo = ++codVeiculo;
 }
+
+// Interface do Usuário
+void submenuCliente() {
+  printf("***** CLIENTES *****\n\n");
+  printf("1 - CADASTRAR CLIENTE\n");
+  printf("2 - CONSULTAR CLIENTE\n");
+  printf("3 - LISTAR CLIENTES\n");
+  printf("4 - REMOVER CLIENTE\n");
+  printf("5 - VOLTAR\n");
+  printf("\nENTRE COM A OPÇÃO DESEJADA: ");
+}
+
+void submenuVeiculo() {
+  printf("***** VEÍCULOS *****\n\n");
+  printf("1 - CADASTRAR VEÍCULO\n");
+  printf("2 - CONSULTAR VEÍCULO\n");
+  printf("3 - LISTAR VEÍCULOS\n");
+  printf("4 - REMOVER VEÍCULO\n");
+  printf("5 - VOLTAR\n");
+  printf("\nENTRE COM A OPÇÃO DESEJADA: ");
+}
+
+void submenuLocacao() {
+  printf("***** LOCAÇÕES *****\n\n");
+  printf("1 - CADASTRAR LOCAÇÃO\n");
+  printf("2 - CONSULTAR LOCAÇÃO\n");
+  printf("3 - LISTAR LOCAÇÕES\n");
+  printf("4 - REMOVER LOCAÇÃO\n");
+  printf("5 - VOLTAR\n");
+  printf("\nENTRE COM A OPÇÃO DESEJADA: ");
+}
+
+void submenuManutencao() {
+  printf("***** MANUTENÇÃO *****\n\n");
+  printf("1 - INSERIR VEÍCULO\n");
+  printf("2 - LISTAR VEÍCULOS EM MANUTENÇÃO\n");
+  printf("3 - RETIRAR VEÍCULO DA MANUTENÇÃO\n");
+  printf("4 - VOLTAR\n");
+  printf("\nENTRE COM A OPÇÃO DESEJADA: ");
+}
+
+/* void previsaoFaturamento() {
+  printf("***** PREVISÃO DE FATURAMENTO *****\n\n");
+  printf("Até 31/12/2020\n");
+  printf("Reservas: %d\n");
+  printf("Valor Total das Reservas: R$ %.2f\n");
+  printf("Custo Total das Reservas: R$ %.2f\n");
+  printf("\n\nFaturamento: R$ %.2f\n");
+  printf("\n0 - VOLTAR");
+} */
 
 void menu() {
   printf("***** SEJA BEM-VINDO! *****\n\n");
@@ -265,28 +314,142 @@ void menu() {
   printf("\nENTRE COM A OPÇÃO DESEJADA: ");
 }
 
-int main() {
-
-  CLIENTE X;
-  Lista C;
-  int i = 2;
+//CRUDs
+void switchCRUDCliente(int subOpcao) {
+  Lista lc;
   ponteiro p = NULL;
+  CLIENTE C;
+  criarListaCliente(&C);
+
+  do {
+    switch (subOpcao) {
+    case 1:
+      cadastrarCliente(&C);
+      inserirCliente(&lc, C);
+      break;
+
+    case 2:
+      printf("\nEntre com o código do cliente que deseja consultar:\n");
+      scanf("%d", &C.codigo);
+      // consultarCliente(lc, C);
+      break;
+
+    case 3:
+      p = lc.prim;
+      while (p != lc.ult) {
+        exibirCliente(p->prox->cli);
+        p = p->prox;
+      }
+      printf("\n FINAL DA LISTA\n ");
+      break;
+
+    case 4:
+      printf("\nEntre com o código do cliente que deseja remover:\n");
+      scanf("%d", &C.codigo);
+      // removerCliente(&lc, &C);
+      printf("\nCLIENTE REMOVIDO COM SUCESSO!\n");
+      // consultarCliente(lc, C);
+      break;
+
+    case 5:
+      menu();
+      break;
+
+    default: 
+      printf("Selecione apenas uma das opções apresentadas! (1 a 5)\n\n");
+      submenuCliente();
+      scanf("%d", &subOpcao);
+      switchCRUDCliente(subOpcao);
+      break;
+    }
+  } while (subOpcao != 5);
+}
+
+void switchCRUDVeiculo(int subOpcao) {
+  ListaVeiculo lv;
+  v veic = NULL;
+  VEICULO V;
+  // criarListaVeiculo(&V);
+
+  do {
+    switch (subOpcao) {
+    case 1:
+      cadastrarVeiculo(&V);
+      inserirVeiculo(&lv, V);
+      break;
+
+    case 2:
+      printf("\nEntre com o código do veículo que deseja consultar:\n");
+      scanf("%d", &V.codigo);
+      // consultarVeiculo(lv, V);
+      break;
+
+    case 3:
+      veic = lv.prim;
+      while (veic != lv.ult) {
+        exibirVeiculo(veic->prox->veiculo);
+        veic = veic->prox;
+      }
+      printf("\n FINAL DA LISTA\n ");
+      break;
+
+    case 4:
+      printf("\nEntre com o código do veículo que deseja remover:\n");
+      scanf("%d", &V.codigo);
+      removerVeiculo(&lv, &V);
+      printf("\nVEÍCULO REMOVIDO COM SUCESSO!\n");
+      // consultarVeiculo(lv, V);
+      break;
+
+    case 5:
+      menu();
+      break;
+    }
+  } while (subOpcao != 5);
+}
+
+// Função Principal
+int main(void) {
+  int opcao, subOpcao;
+
+  do {
   menu();
+  scanf("%d", &opcao);
+  switch (opcao) {
+  case 1:
+    submenuCliente();
+    scanf("%d", &subOpcao);
+    switchCRUDCliente(subOpcao);
+    break;
 
-  criarListaCliente(&C); // testando funções
+  case 2:
+    submenuVeiculo();
+    scanf("%d", &subOpcao);
+    switchCRUDVeiculo(subOpcao);
+    break;
 
-  while (i--) {
-    cadastrarCliente(&X);
-    inserirCliente(&C, X);
+  case 3:
+    submenuLocacao();
+    // scanf("%d", &subOpcao);
+    // switchCRUDLocacao(subOpcao);
+    break;
+
+  case 4:
+    submenuManutencao();
+    // scanf("%d", &subOpcao);
+    // switchCRUDManutencao(subOpcao);
+    break;
+
+  case 5:
+    // previsaoFaturamento();
+    break;
+
+  case 6:
+    printf("\n MUITO OBRIGADO POR USAR NOSSO SISTEMA!\n");
+    printf("\n ------ Feito por AloCar Systems ------\n");
+    break;
   }
-
-  p = C.prim;
-
-  while (p != C.ult) {
-    exibirCliente(p->prox->cli);
-    p = p->prox;
-  }
-  printf("\n FINAL DA LISTA\n ");
+} while (opcao != 6);
 
   return 0;
 }

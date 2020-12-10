@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 
+
 int codCliente = 0;
 int codVeiculo = 0;
 
@@ -13,7 +14,7 @@ typedef struct {
   int ano;
 } DIA;
 
-typedef struct {
+typedef struct{
   int codigo;
   char nome[80];
   char data_nasc[40];
@@ -24,9 +25,9 @@ typedef struct {
   float descontoApp;
   int qtdLocacoes;
   float valorTotal;
-} CLIENTE;
+}CLIENTE;
 
-typedef struct {
+typedef struct{
   int codigo;
   char fabricante[50];
   char modelo[50];
@@ -36,8 +37,8 @@ typedef struct {
   int ano;
   float valorDia;
   float despesaDia;
-  char status;
-} VEICULO;
+  char status[10];
+}VEICULO;
 
 typedef struct {
   CLIENTE cliente;
@@ -48,32 +49,32 @@ typedef struct {
   float valorDia;
   float despesaDia;
   float despesaTotal;
-} LOCACAO;
+}LOCACAO;
 
 // Clientes
-typedef struct Elem {
+typedef struct elemC {
   CLIENTE cli;
-  struct Elem *prox;
-} Caixa;
+  struct elemC *prox;
+} CaixaCliente;
 
-typedef Caixa *ponteiro;
+typedef CaixaCliente *pC;
 
 typedef struct {
-  ponteiro prim, ult;
+  pC prim, ult;
   int qtd;
-} Lista;
+}ListaCliente;
 
-void criarListaCliente(Lista *C) {
-  C->prim = (ponteiro)malloc(sizeof(Caixa));
+void criarListaCliente(ListaCliente *C) {
+  C->prim = (pC)malloc(sizeof(CaixaCliente));
   C->ult = C->prim;
   C->prim->prox = NULL;
   C->qtd = 0;
 }
 
-void inserirCliente(Lista *C, CLIENTE X) {
-  ponteiro p, q;
+void inserirCliente(ListaCliente *C, CLIENTE X) {
+  pC p, q;
 
-  q = (ponteiro)malloc(sizeof(Caixa));
+  q = (pC)malloc(sizeof(CaixaCliente));
   q->cli = X;
 
   p = C->prim;
@@ -87,8 +88,8 @@ void inserirCliente(Lista *C, CLIENTE X) {
     C->ult = q;
 }
 
-void exibeListaCliente(Lista C) {
-  ponteiro p;
+void exibeListaCliente(ListaCliente C) {
+  pC p;
 
   printf("\n ********");
   printf("\n * Cab  *");
@@ -108,7 +109,7 @@ void exibeListaCliente(Lista C) {
 }
 
 void cadastrarCliente(CLIENTE *C) {
-  printf("=====> CADASTRAR CLIENTE <=====\n\n");
+  printf("======> CADASTRAR CLIENTE <======\n");
   printf("\nENTRE COM O NOME DO CLIENTE: ");
   fflush(stdin);
   fgets(C->nome, 80, stdin);
@@ -127,15 +128,16 @@ void cadastrarCliente(CLIENTE *C) {
   printf("\nENTRE COM O E-MAIL DO CLIENTE: ");
   fflush(stdin);
   fgets(C->email, 50, stdin);
-  printf("\n\n\n\nCLIENTE CADASTRADO COM SUCESSO\n");
+  printf("\n\nCLIENTE CADASTRADO COM SUCESSO\n");
   fflush(stdin);
   C->codigo = ++codCliente;
 }
 
 void exibirCliente(CLIENTE C) {
-  printf("\nDADOS DO CLIENTE\n\n");
+  printf("=======> DADOS DO CLIENTE <=======\n\n");
   fflush(stdin);
   printf("\nCODIGO DO CLIENTE: %d", C.codigo);
+  printf("\n");
   fflush(stdin);
   printf("\nNOME DO CLIENTE: %s", C.nome);
   fflush(stdin);
@@ -149,33 +151,86 @@ void exibirCliente(CLIENTE C) {
   fflush(stdin);
   printf("\nE-MAIL: %s", C.email);
   fflush(stdin);
-  printf("\n--------------------------------\n");
+  printf("\n==================================\n");
+}
+
+void consultarCliente(ListaCliente C, CLIENTE X){
+    pC p;
+
+    p=C.prim;
+
+    //buscar cliente passando cpf por parametro
+    while ((p!=C.ult)&&( !(strcmp(X.cpf, p->prox->cli.cpf)==0)))
+	     p=p->prox;
+
+    if((p==C.ult)||(!(strcmp(X.cpf, p->prox->cli.cpf)==0)))
+	     printf("\nCliente com o cpf %s nao encontrado!\n", X.cpf);
+    else
+        exibirCliente(p->prox->cli);
+
+}
+
+void removerCliente(ListaCliente *C, CLIENTE *X){
+    pC p, q;
+
+    p=C->prim;
+
+    //buscar cliente passando cpf por parametro
+    while ((p!=C->ult)&&( !(strcmp(X->cpf, p->prox->cli.cpf)==0)))
+	     p=p->prox;
+
+    if((p==C->ult)||(!(strcmp(X->cpf, p->prox->cli.cpf)==0)))
+	     printf("\nCliente com o cpf %s nao encontrado!\n", X->cpf);
+    else{
+        int op;
+        CLIENTE Y = *X;
+
+        exibirCliente(Y);
+        //verificação de segurança
+        printf("\nDeseja realmente remover cadastro deste cliente? \n(Digite 1 para SIM ou 2 para NAO)\n");
+        scanf("%d", &op);
+
+        if(op == 1){
+            q=p->prox;
+            *X = q->cli;
+            p->prox=q->prox;
+            if(q==C->ult)
+                C->ult=p;
+            C->qtd--;
+            free(q);
+            printf("\n\nCadastro de cliente removido com sucesso!\n\n");
+        }
+        else
+            printf("\n\nVoltando ao Menu!\n\n");
+
+
+    }
 }
 
 // Veículos
 typedef struct elementoVeiculo {
   VEICULO veiculo;
   struct elementoVeiculo *prox;
-} Veiculo;
+} CaixaVeiculo;
 
-typedef Veiculo *v;
+typedef CaixaVeiculo *pV;
 
 typedef struct {
-  v prim, ult;
+  pV prim, ult;
   int qtd;
-} ListaVeiculo;
+}ListaVeiculo;
 
 void criarListaVeiculo(ListaVeiculo *lv) {
-  lv->prim = (v)malloc(sizeof(Veiculo));
+  lv->prim = (pV)malloc(sizeof(CaixaVeiculo));
   lv->ult = lv->prim;
   lv->prim->prox = NULL;
   lv->qtd = 0;
 }
 
-void inserirVeiculo(ListaVeiculo *lv, VEICULO veic) {
-  v p, q;
+void inserirVeiculo(ListaVeiculo *lv, VEICULO veic){
+  pV p, q;
 
-  q = (v)malloc(sizeof(Veiculo));
+  q = (pV)malloc(sizeof(CaixaVeiculo));
   q->veiculo = veic;
 
   p = lv->prim;
@@ -189,7 +244,7 @@ void inserirVeiculo(ListaVeiculo *lv, VEICULO veic) {
 }
 
 void removerVeiculo(ListaVeiculo *lv, VEICULO *V) {
-  v p, q;
+  pV p, q;
   p = lv->prim;
   while ((p != lv->ult) && (V->codigo > p->prox->veiculo.codigo))
     p = p->prox;
@@ -239,15 +294,17 @@ void cadastrarVeiculo(VEICULO *V) {
   fflush(stdin);
   fgets(V->tipoCombustivel, 20, stdin);
   printf("\nENTRE COM O ANO: ");
+  fflush(stdin);
   scanf("%d", &V->ano);
   printf("\nENTRE COM O VALOR DO ALUGUEL POR DIA DO VEÍCULO: ");
+  fflush(stdin);
   scanf("%f", &V->valorDia);
   printf("\nENTRE COM A DESPESA POR DIA DO VEÍCULO: ");
-  scanf("%d", &V->despesaDia);
-  printf("\nENTRE COM O STATUS DO VEÍCULO (D = Disponível | R = Reservado | M "
-         "= Em Manutenção): ");
   fflush(stdin);
-  fgets(V->status, 1, stdin);
+  scanf("%d", &V->despesaDia);
+  printf("\nENTRE COM O STATUS DO VEÍCULO (D = Disponível | R = Reservado | M = Em Manutenção): ");
+  fflush(stdin);
+  fgets(V->status, 10, stdin);
   printf("\n\n\n\nVEICULO CADASTRADO COM SUCESSO!\n");
   fflush(stdin);
   V->codigo = ++codVeiculo;
@@ -267,26 +324,59 @@ void menu() {
 
 int main() {
 
-  CLIENTE X;
-  Lista C;
-  int i = 2;
-  ponteiro p = NULL;
-  menu();
+    CLIENTE X;
+    VEICULO Z;
+    ListaCliente LC;
+    ListaVeiculo lv;
+    int i = 2;
+    pV v = NULL;
+    pC c = NULL;
 
-  criarListaCliente(&C); // testando funções
+    criarListaCliente(&LC);
+    //criarListaVeiculo(&lv);
 
-  while (i--) {
-    cadastrarCliente(&X);
-    inserirCliente(&C, X);
-  }
 
-  p = C.prim;
+    // testando funções
+    while(i--){
+        cadastrarCliente(&X);
+        inserirCliente(&LC, X);
+        //cadastrarVeiculo(&Z);
+        //inserirVeiculo(&lv, Z);
+    }
 
-  while (p != C.ult) {
-    exibirCliente(p->prox->cli);
-    p = p->prox;
-  }
-  printf("\n FINAL DA LISTA\n ");
+      /*v = lv.prim;
 
-  return 0;
+      while (v != lv.ult) {
+        exibirVeiculo(v->prox->veiculo);
+        v = v->prox;
+        //p = p->prox;
+        //exibirCliente
+      }
+      printf("\n FINAL DA LISTA\n ");
+
+      removerVeiculo(&lv, &Z);*/
+
+
+
+
+    printf("\nInforme o cpf que deseja consultar: ");
+    fflush(stdin);
+    fgets(X.cpf, 50, stdin);
+    consultarCliente(LC, X);
+
+    printf("\nInforme o cpf do cliente que deseja remover: ");
+    fflush(stdin);
+    fgets(X.cpf, 50, stdin);
+    removerCliente(&LC, &X);
+
+    fflush(stdin);
+    c = LC.prim;
+
+    while(c != LC.ult){
+        exibirCliente(c->prox->cli);
+        c = c->prox;
+    }
+
+
+    return (0);
 }

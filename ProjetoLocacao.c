@@ -5,13 +5,16 @@
 
 int codCliente = 0;
 int codVeiculo = 0;
+int codLocacao = 0;
+
+int subOpcao;
 
 // Entidades
-typedef struct {
+/*typedef struct {
   int dia;
   int mes;
   int ano;
-} DIA;
+} DIA;*/
 
 typedef struct {
   int codigo;
@@ -41,14 +44,19 @@ typedef struct {
 } VEICULO;
 
 typedef struct {
+  int codigo;
   CLIENTE cliente;
   VEICULO veiculo;
-  DIA diaInicio;
+  /*DIA diaInicio;
   DIA diaDevolucao;
-  DIA diaTotal;
+  DIA diaTotal;*/
+  int diaInicio;
+  int diaDevolucao;
+  int diaTotal;
   float valorDia;
   float despesaDia;
   float despesaTotal;
+  float valorTotal;
 } LOCACAO;
 
 // Clientes
@@ -270,20 +278,16 @@ void cadastrarVeiculo(VEICULO *V) {
 void exibirVeiculo(VEICULO V) {
   printf("\n=======> DADOS DO VEICULO <=======\n");
   printf("\n ========================== %3d =======================", V.codigo);
-  printf("\n == FABRICANTE: %50s                                 ==",
-         V.fabricante);
-  printf("\n == PLACA: %50s                                      ==", V.placa);
-  printf("\n == MODELO: %50s                                     ==", V.modelo);
-  printf("\n == TIPO: %50s                                       ==", V.tipo);
-  printf("\n == COR: %20s                                        ==", V.cor);
-  printf("\n == TIPO DE COMBUSTIVEL: %20s                        ==",
-         V.tipoCombustivel);
-  printf("\n == ANO: %d                                          ==", V.ano);
-  printf("\n == ALUGUEL POR DIA: %.2f                            ==",
-         V.valorDia);
-  printf("\n == DESPESA POR DIA: %.2f                            ==",
-         V.despesaDia);
-  printf("\n == STATUS: %c                                       ==", V.status);
+  printf("\n FABRICANTE: %50s", V.fabricante);
+  printf("\n PLACA: %50s", V.placa);
+  printf("\n MODELO: %50s", V.modelo);
+  printf("\n TIPO: %50s", V.tipo);
+  printf("\n COR: %20s", V.cor);
+  printf("\n TIPO DE COMBUSTIVEL: %20s", V.tipoCombustivel);
+  printf("\n ANO: %d", V.ano);
+  printf("\n ALUGUEL POR DIA: %.2f", V.valorDia);
+  printf("\n DESPESA POR DIA: %.2f", V.despesaDia);
+  printf("\n STATUS: %c", V.status);
   printf("\n ======================================================\n");
 }
 
@@ -348,6 +352,155 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
     } else {
       printf("\n\nNAO EH POSSIVEL REMOVER VEICULO COM STATUS R(Reservado) OU "
              "M(Manutencao)\n\n");
+    }
+  }
+}
+
+// Locações
+typedef struct elemL {
+  LOCACAO locacao;
+  struct elemL *prox;
+} CaixaLocacao;
+
+typedef CaixaLocacao *pL;
+
+typedef struct {
+  pL prim, ult;
+  int qtd;
+} ListaLocacao;
+
+void criarListaLocacao(ListaLocacao *lc) {
+  lc->prim = (pL)malloc(sizeof(CaixaLocacao));
+  lc->ult = lc->prim;
+  lc->prim->prox = NULL;
+  lc->qtd = 0;
+}
+
+void inserirLocacao(ListaLocacao *ll, LOCACAO loc) {
+  pL p, q;
+
+  q = (pL)malloc(sizeof(CaixaLocacao));
+  q->locacao = loc;
+
+  p = ll->prim;
+  while ((p != ll->ult) && (loc.codigo > p->prox->locacao.codigo)) {
+    p = p->prox;
+  }
+  q->prox = p->prox;
+  p->prox = q;
+  ll->qtd++;
+  if (p == ll->ult) {
+    ll->ult = q;
+  }
+}
+
+void cadastrarLocacao(LOCACAO *L, CLIENTE C, VEICULO V) {
+  printf("\n=====> CADASTRAR LOCACAO <=====\n");
+  printf("\nENTRE COM O CODIGO DO CLIENTE: ");
+  fflush(stdin);
+  scanf("%d", &C.codigo);
+  printf("\nENTRE COM O CODIGO DO VEICULO: ");
+  fflush(stdin);
+  scanf("%d", &V.codigo);
+  printf("\nENTRE COM O DIA INICIAL DA LOCACAO: ");
+  fflush(stdin);
+  scanf("%d", &L->diaInicio);
+  printf("\nENTRE COM O DIA DA DEVOLUCAO: ");
+  fflush(stdin);
+  scanf("%d", &L->diaDevolucao);
+  printf("\n\n\n\nLOCACAO CADASTRADA COM SUCESSO!\n");
+  fflush(stdin);
+  L->diaTotal = L->diaDevolucao - L->diaInicio;
+  L->despesaTotal = (V.despesaDia) * (L->diaTotal);
+  L->valorTotal = ((V.valorDia) * (L->diaTotal));
+  L->codigo = ++codLocacao;
+}
+
+void exibirLocacao(LOCACAO L) {
+  printf("\n=======> DADOS DA LOCACAO <=======\n\n");
+  fflush(stdin);
+  printf("\nCODIGO DO CLIENTE: %d", L.cliente.codigo);
+  printf("\n");
+  fflush(stdin);
+  printf("\nNOME DO CLIENTE: %s", L.cliente.nome);
+  fflush(stdin);
+  printf("\nCODIGO DO VEICULO: %d", L.veiculo.codigo);
+  printf("\n");
+  fflush(stdin);
+  printf("\nMODELO DO VEICULO: %s", L.veiculo.modelo);
+  fflush(stdin);
+  printf("\nDATA INICIAL DA LOCACAO: %d/12/2020", L.diaInicio);
+  fflush(stdin);
+  printf("\nDATA DE DEVOLUCAO: %d/12/2020", L.diaDevolucao);
+  fflush(stdin);
+  printf("\nDURACAO DA LOCACAO: %d DIAS", L.diaTotal);
+  fflush(stdin);
+  printf("\nCUSTO DA LOCACAO: R$ %.2f", L.despesaTotal);
+  fflush(stdin);
+  printf("\nVALOR DA LOCACAO: R$ %.2f", L.valorTotal);
+  fflush(stdin);
+  printf("\n==================================\n");
+}
+
+void listarTodasLocacoes(ListaLocacao LL) {
+  pL l = LL.prim;
+
+  while (l != LL.ult) {
+    exibirLocacao(l->prox->locacao);
+    l = l->prox;
+  }
+}
+
+void consultarLocacao(ListaLocacao L, LOCACAO X) {
+  pL p;
+
+  p = L.prim;
+
+  // Buscar locação pelo código
+  while ((p != L.ult) && (X.codigo != 0 && p->prox->locacao.codigo != 0)) {
+    p = p->prox;
+  }
+
+  if ((p == L.ult) || (X.codigo != 0 && p->prox->locacao.codigo != 0)) {
+    printf("\nLOCACAO COM O CODIGO %d NAO ENCONTRADA!\n", X.codigo);
+  } else {
+    exibirLocacao(p->prox->locacao);
+  }
+}
+
+void removerLocacao(ListaLocacao *LL, LOCACAO *X) {
+  pL p, q;
+  p = LL->prim;
+
+  // Buscar locação pelo código
+  while ((p != LL->ult) && (X->codigo != 0 && p->prox->locacao.codigo != 0)) {
+    p = p->prox;
+  }
+
+  if ((p == LL->ult) || (X->codigo != 0 && p->prox->locacao.codigo != 0)) {
+    printf("\nLOCACAO COM O CODIGO %d NAO ENCONTRADA!\n", X->codigo);
+  } else {
+
+    int op;
+    LOCACAO Y = *X;
+
+    exibirLocacao(Y);
+    // Verificação de Segurança
+    printf("\nDESEJA REALMENTE REMOVER ESTA LOCACAO?\n(DIGITE 1 PARA SIM OU 2 "
+           "PARA NAO)\n");
+
+    if (op == 1) {
+      q = p->prox;
+      *X = q->locacao;
+      p->prox = q->prox;
+      if (q == LL->ult) {
+        LL->ult = p;
+      }
+      LL->qtd--;
+      free(q);
+      printf("\n\nREGISTRO DE LOCACAO REMOVIDO COM SUCESSO!\n\n");
+    } else {
+      printf("\n\nVOLTANDO AO MENU!\n\n");
     }
   }
 }
@@ -428,13 +581,16 @@ void previsaoFaturamento() {
 }
 
 // CRUDs
-void switchCRUDCliente(int subOpcao) {
+void switchCRUDCliente() {
   ListaCliente lc;
   pC p = NULL;
   CLIENTE C;
   criarListaCliente(&lc);
 
   do {
+    submenuCliente();
+    scanf("%d", &subOpcao);
+
     switch (subOpcao) {
     case 1:
       cadastrarCliente(&C);
@@ -442,8 +598,8 @@ void switchCRUDCliente(int subOpcao) {
       break;
 
     case 2:
-      printf("\nEntre com o código do cliente que deseja consultar:\n");
-      scanf("%d", &C.codigo);
+      printf("\nEntre com o cpf do cliente que deseja consultar:\n");
+      scanf("%d", &C.cpf);
       consultarCliente(lc, C);
       break;
 
@@ -453,8 +609,8 @@ void switchCRUDCliente(int subOpcao) {
       break;
 
     case 4:
-      printf("\nEntre com o código do cliente que deseja remover:\n");
-      scanf("%d", &C.codigo);
+      printf("\nEntre com o cpf do cliente que deseja remover:\n");
+      scanf("%d", &C.cpf);
       removerCliente(&lc, &C);
       printf("\nCLIENTE REMOVIDO COM SUCESSO!\n");
       consultarCliente(lc, C);
@@ -474,13 +630,16 @@ void switchCRUDCliente(int subOpcao) {
   } while (subOpcao != 5);
 }
 
-void switchCRUDVeiculo(int subOpcao) {
+void switchCRUDVeiculo() {
   ListaVeiculo lv;
   pV veic = NULL;
   VEICULO V;
   criarListaVeiculo(&lv);
 
   do {
+    submenuVeiculo();
+    scanf("%d", &subOpcao);
+
     switch (subOpcao) {
     case 1:
       cadastrarVeiculo(&V);
@@ -488,8 +647,8 @@ void switchCRUDVeiculo(int subOpcao) {
       break;
 
     case 2:
-      printf("\nEntre com o código do veículo que deseja consultar:\n");
-      scanf("%d", &V.codigo);
+      printf("\nEntre com a placa do veículo que deseja consultar:\n");
+      scanf("%d", &V.placa);
       consultarVeiculo(lv, V);
       break;
 
@@ -503,8 +662,8 @@ void switchCRUDVeiculo(int subOpcao) {
       break;
 
     case 4:
-      printf("\nEntre com o código do veículo que deseja remover:\n");
-      scanf("%d", &V.codigo);
+      printf("\nEntre com a placa do veículo que deseja remover:\n");
+      scanf("%d", &V.placa);
       removerVeiculo(&lv, &V);
       printf("\nVEÍCULO REMOVIDO COM SUCESSO!\n");
       consultarVeiculo(lv, V);
@@ -524,6 +683,63 @@ void switchCRUDVeiculo(int subOpcao) {
   } while (subOpcao != 5);
 }
 
+void switchCRUDLocacao(int subOpcao) {
+  ListaVeiculo lv;
+  ListaCliente lc;
+  ListaLocacao ll;
+  pL loc = NULL;
+  LOCACAO L;
+  VEICULO V;
+  CLIENTE C;
+  criarListaLocacao(&ll);
+
+  do {
+    submenuLocacao();
+    scanf("%d", &subOpcao);
+
+    switch (subOpcao) {
+    case 1:
+      cadastrarLocacao(&L, C, V);
+      inserirLocacao(&ll, L);
+      break;
+
+    case 2:
+      printf("\nEntre com o codigo da locacao que deseja consultar:\n");
+      scanf("%d", &L.codigo);
+      consultarLocacao(ll, L);
+      break;
+
+    case 3:
+      loc = ll.prim;
+      while (loc != ll.ult) {
+        exibirLocacao(loc->prox->locacao);
+        loc = loc->prox;
+      }
+      printf("\n FINAL DA LISTA \n");
+      break;
+
+    case 4:
+      printf("Entre com o codigo da locacao que deseja remover:\n");
+      scanf("%d", &L.codigo);
+      removerLocacao(&ll, &L);
+      printf("\n LOCACAO REMOVIDA COM SUCESSO! \n");
+      consultarLocacao(ll, L);
+      break;
+
+    case 5:
+      menu();
+      break;
+
+    default:
+      printf("Selecione apenas uma das opcoes apresentadas! (1 a 5)\n");
+      submenuLocacao();
+      scanf("%d", &subOpcao);
+      switchCRUDLocacao(subOpcao);
+    }
+
+  } while (subOpcao != 5);
+}
+
 // Função Principal
 int main(void) {
   int opcao, subOpcao;
@@ -533,21 +749,15 @@ int main(void) {
     scanf("%d", &opcao);
     switch (opcao) {
     case 1:
-      submenuCliente();
-      scanf("%d", &subOpcao);
-      switchCRUDCliente(subOpcao);
+      switchCRUDCliente();
       break;
 
     case 2:
-      submenuVeiculo();
-      scanf("%d", &subOpcao);
-      switchCRUDVeiculo(subOpcao);
+      switchCRUDVeiculo();
       break;
 
     case 3:
-      submenuLocacao();
-      // scanf("%d", &subOpcao);
-      // switchCRUDLocacao(subOpcao);
+      switchCRUDLocacao();
       break;
 
     case 4:

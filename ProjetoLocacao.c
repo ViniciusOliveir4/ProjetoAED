@@ -4,10 +4,10 @@
 #include <math.h>
 #define MAX 200
 
-int codCliente = 0;
+/*int codCliente = 0;
 int codVeiculo = 0;
 int codLocacao = 0;
-int codManutencao = 0;
+int codManutencao = 0;*/
 int subOpcao;
 
 
@@ -67,12 +67,14 @@ typedef struct {
 typedef struct {
     CLIENTE itemCli[MAX];
     int prim, ult, tam;
+    int contCodigos;
 } ListaCliente;
 
 void criarListaCliente(ListaCliente *LC) {
     LC->prim = 0;
     LC->ult = 0;
     LC->tam = 0;
+    LC->contCodigos = 0;
 }
 
 int verificarListaClienteVazia(ListaCliente LC) {
@@ -106,7 +108,7 @@ void inserirCliente(ListaCliente *LC, CLIENTE X) {
     }
 }
 
-void cadastrarCliente(CLIENTE *C) {
+void cadastrarCliente(CLIENTE *C, int codCliente) {
   printf("\n======> CADASTRAR CLIENTE <======\n");
   printf("\nENTRE COM O NOME DO CLIENTE: ");
   fflush(stdin);
@@ -249,12 +251,14 @@ void removerCliente(ListaCliente *LC, CLIENTE *X) {
 typedef struct {
     VEICULO itemVeic[MAX];
     int prim, ult, tam;
+    int contCodigos;
 } ListaVeiculo;
 
 void criarListaVeiculo(ListaVeiculo *LV) {
     LV->prim = 0;
     LV->ult = 0;
     LV->tam = 0;
+    LV->contCodigos = 0;
 }
 
 int verificarListaVeiculoVazia(ListaVeiculo LV) {
@@ -289,7 +293,7 @@ void inserirVeiculo(ListaVeiculo *LV, VEICULO X) {
     }
 }
 
-void cadastrarVeiculo(VEICULO *V) {
+void cadastrarVeiculo(VEICULO *V, int codVeiculo) {
   printf("\n=====> CADASTRAR VEICULO <=====\n");
   printf("\nENTRE COM O FABRICANTE: ");
   fflush(stdin);
@@ -448,12 +452,14 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
 typedef struct {
     LOCACAO itemLoc[MAX];
     int prim, ult, tam;
+    int contCodigos;
 } ListaLocacao;
 
 void criarListaLocacao(ListaLocacao *LL) {
     LL->prim = 0;
     LL->ult = 0;
     LL->tam = 0;
+    LL->contCodigos = 0;
 }
 
 int verificarListaLocacaoVazia(ListaLocacao LL) {
@@ -487,7 +493,7 @@ void inserirLocacao(ListaLocacao *LL, LOCACAO X) {
     }
 }
 
-int cadastrarLocacao(ListaCliente *LC, ListaVeiculo *LV, CLIENTE /***/C, VEICULO /***/V, LOCACAO *L) {
+int cadastrarLocacao(ListaCliente *LC, ListaVeiculo *LV, CLIENTE /***/C, VEICULO /***/V, LOCACAO *L, int codLocacao) {
     int i, indiceCli, indiceVeic;
     int sucessoLocacao = 0;
 
@@ -723,12 +729,14 @@ void removerLocacao(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL, CLIENT
 typedef struct {
     MANUTENCAO itemMan[MAX];
     int prim, ult, tam;
+    int contCodigos;
 } ListaManutencao;
 
 void criarListaManutencao(ListaManutencao *LM) {
     LM->prim = 0;
     LM->ult = 0;
     LM->tam = 0;
+    LM->contCodigos = 0;
 }
 
 int verificarListaManutencaoVazia(ListaManutencao LM) {
@@ -763,7 +771,7 @@ void inserirManutencao(ListaManutencao *LM, MANUTENCAO X) {
 
 }
 
-int cadastrarManutencao(ListaVeiculo *LV, VEICULO V, MANUTENCAO *M) {
+int cadastrarManutencao(ListaVeiculo *LV, VEICULO V, MANUTENCAO *M, int codManutencao) {
     int i, indiceVeic;
     int sucessoManutencao = 0;
 
@@ -973,6 +981,8 @@ void submenuManutencao() {
 // CRUDs
 void switchCRUDCliente(ListaCliente *LC, CLIENTE *C) {
 
+    int codCliente;
+
     CLIENTE AC;
     ListaCliente ALC;
 
@@ -985,8 +995,10 @@ void switchCRUDCliente(ListaCliente *LC, CLIENTE *C) {
 
         switch (subOpcao) {
         case 1:
-            cadastrarCliente(&AC);
+            codCliente = ALC.contCodigos;
+            cadastrarCliente(&AC, codCliente);
             inserirCliente(&ALC, AC);
+            ALC.contCodigos++;
             break;
 
         case 2:
@@ -1026,6 +1038,9 @@ void switchCRUDCliente(ListaCliente *LC, CLIENTE *C) {
 }
 
 void switchCRUDVeiculo(ListaVeiculo *LV, VEICULO *V) {
+
+    int codVeiculo;
+
     VEICULO AV;
     ListaVeiculo ALV;
 
@@ -1038,8 +1053,10 @@ void switchCRUDVeiculo(ListaVeiculo *LV, VEICULO *V) {
 
     switch (subOpcao) {
     case 1:
-      cadastrarVeiculo(&AV);
+      codVeiculo = ALV.contCodigos;
+      cadastrarVeiculo(&AV, codVeiculo);
       inserirVeiculo(&ALV, AV);
+      ALV.contCodigos++;
       break;
 
     case 2:
@@ -1079,6 +1096,7 @@ void switchCRUDVeiculo(ListaVeiculo *LV, VEICULO *V) {
 
 void switchCRUDLocacao(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL, CLIENTE *C, VEICULO *V, LOCACAO *L) {
 
+    int codLocacao;
     int sucessoLocacao = 0;
 
     CLIENTE AC;
@@ -1101,9 +1119,11 @@ void switchCRUDLocacao(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL, CLI
 
         switch (subOpcao) {
         case 1:
-            sucessoLocacao = cadastrarLocacao(&ALC, &ALV, /*&*/AC, /*&*/AV, &AL);
+            codLocacao = ALL.contCodigos;
+            sucessoLocacao = cadastrarLocacao(&ALC, &ALV, /*&*/AC, /*&*/AV, &AL, codLocacao);
             if(sucessoLocacao==0){
                 inserirLocacao(&ALL, AL);
+                ALL.contCodigos++;
             }
             break;
         case 2:
@@ -1144,6 +1164,7 @@ void switchCRUDLocacao(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL, CLI
 
 void switchCRUDManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO *V, MANUTENCAO *M) {
 
+    int codManutencao;
     int sucessoManutencao = 0;
 
     VEICULO AV;
@@ -1162,9 +1183,11 @@ void switchCRUDManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO *V, MAN
 
         switch (subOpcao) {
         case 1:
-            sucessoManutencao = cadastrarManutencao(&ALV, AV, &AM);
+            codManutencao = ALM.contCodigos;
+            sucessoManutencao = cadastrarManutencao(&ALV, AV, &AM, codManutencao);
             if(sucessoManutencao==0){
                 inserirManutencao(&ALM, AM);
+                ALM.contCodigos++;
             }
             break;
         case 2:
@@ -1384,10 +1407,15 @@ int main() {
     ListaLocacao LL;
     ListaManutencao LM;
 
-    criarListaCliente(&LC);
+    /*criarListaCliente(&LC);
     criarListaVeiculo(&LV);
     criarListaLocacao(&LL);
-    criarListaManutencao(&LM);
+    criarListaManutencao(&LM);*/
+
+    carregarClientes(&LC);
+    carregarVeiculos(&LV);
+    carregarLocacoes(&LL);
+    carregarManutencoes(&LM);
 
     do {
         menu();
@@ -1418,6 +1446,10 @@ int main() {
             printf("\nMUITO OBRIGADO POR USAR NOSSO SISTEMA!\n");
             printf("\nDADOS GRAVADOS COM SUCESSO!\n");
             printf("\n------ Feito por AloCar Systems ------\n");
+            gravarClientes(LC);
+            gravarVeiculos(LV);
+            gravarLocacoes(LL);
+            gravarManutencoes(LM);
             break;
         default:
             printf("\nENTRADA INVALIDA: Selecione apenas uma das opcoes apresentadas! (1 a 6)\n");

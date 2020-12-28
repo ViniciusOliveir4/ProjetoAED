@@ -18,7 +18,6 @@
 
 int subOpcao;
 
-
 // Entidades
 typedef struct {
   int codigo;
@@ -68,7 +67,6 @@ typedef struct {
     int codigo;
     VEICULO veiculo;
 } MANUTENCAO;
-
 
 // Clientes
 typedef struct {
@@ -253,7 +251,6 @@ void removerCliente(ListaCliente *LC, CLIENTE *X) {
     }
 }
 
-
 // Veículos
 typedef struct {
     VEICULO itemVeic[MAX];
@@ -434,7 +431,6 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
         }
     }
 }
-
 
 // Locações
 typedef struct {
@@ -706,7 +702,6 @@ void removerLocacao(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL, CLIENT
     }
 }
 
-
 // Manutenções
 typedef struct {
     MANUTENCAO itemMan[MAX];
@@ -905,7 +900,6 @@ void removerManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO V, MANUTEN
         }
     }
 }
-
 
 // Interface do Usuário
 void menu() {
@@ -1205,7 +1199,6 @@ void switchCRUDManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO *V, MAN
 
 }
 
-
 // Estatísticas e Previsão de Faturamento
 void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL){
 
@@ -1272,7 +1265,6 @@ void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV, ListaLo
   }
 
 }
-
 
 // Arquivos
 void gravarClientes (ListaCliente LC) {
@@ -1374,7 +1366,6 @@ void carregarManutencoes(ListaManutencao *LM) {
         fclose(fp);
     }
 }
-
 
 int main() {
 

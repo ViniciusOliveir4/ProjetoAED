@@ -1,15 +1,22 @@
+
+/*
+    SISTEMAS DE INFORMACAO - INF - UFG.
+    ALGORITMOS E ESTRUTURAS DE DADOS 1 - 2020-1.
+    PROFESSOR: EDMUNDO SERGIO SPOTO.
+    ALUNOS:
+    201700605 - JUNNO LUCIO L. G. JACOB,
+    201804676 -	LUCAS PEREIRA MATOS,
+    201705645 - VINICIUS FERREIRA DE OLIVEIRA.
+    PROJETO FINAL - LOCADORA DE VEICULOS - ALOCAR SYSTEMS.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #define MAX 200
 
-/*int codCliente = 0;
-int codVeiculo = 0;
-int codLocacao = 0;
-int codManutencao = 0;*/
 int subOpcao;
-
 
 // Entidades
 typedef struct {
@@ -21,7 +28,6 @@ typedef struct {
   char telefone[30];
   char email[50];
   int fezReserva;
-  //float descontoApp;
   int qtdLocacoes;
   float valorTotal;
 } CLIENTE;
@@ -61,7 +67,6 @@ typedef struct {
     int codigo;
     VEICULO veiculo;
 } MANUTENCAO;
-
 
 // Clientes
 typedef struct {
@@ -246,7 +251,6 @@ void removerCliente(ListaCliente *LC, CLIENTE *X) {
     }
 }
 
-
 // Veículos
 typedef struct {
     VEICULO itemVeic[MAX];
@@ -289,7 +293,6 @@ void inserirVeiculo(ListaVeiculo *LV, VEICULO X) {
         }
         LV->ult++;
         LV->tam++;
-        //printf("\nVEICULO CADASTRADO COM SUCESSO\n");
     }
 }
 
@@ -322,15 +325,6 @@ void cadastrarVeiculo(VEICULO *V, int codVeiculo) {
   printf("\nENTRE COM A DESPESA POR DIA DO VEICULO: ");
   fflush(stdin);
   scanf("%f", &V->despesaDia);
-  /*printf("\nENTRE COM O STATUS DO VEICULO (1 = Disponivel | 2 = Reservado | 3 = Em Manutencao): ");
-  fflush(stdin);
-  scanf("%d", &V->numStatus);
-  getchar();
-  while(V->numStatus<1 || V->numStatus>3){
-    printf("\nENTRE COM O STATUS VALIDO DO VEICULO (1 = Disponivel | 2 = Reservado | 3 = Em Manutencao): ");
-    fflush(stdin);
-    scanf("%d", &V->numStatus);
-  }*/
 
   printf("\n\n\n\nVEICULO CADASTRADO COM SUCESSO!\n");
   fflush(stdin);
@@ -339,14 +333,6 @@ void cadastrarVeiculo(VEICULO *V, int codVeiculo) {
   V->valorTotal = 0.00;
   V->numStatus = 1;
   strcpy(V->status, "DISPONIVEL");
-
-  /*if(V->numStatus==1){
-    strcpy(V->status, "DISPONIVEL");
-  }else if(V->numStatus==2){
-      strcpy(V->status, "RESERVADO");
-  }else if(V->numStatus==3){
-      strcpy(V->status, "EM MANUTENCAO");
-  }*/
 
 }
 
@@ -422,7 +408,6 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
             if(LV->itemVeic[i].numStatus==1){
                 int op;
                 VEICULO Y = LV->itemVeic[i];
-                //VEICULO Y = *X;
 
                 exibirVeiculo(Y);
 
@@ -446,7 +431,6 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
         }
     }
 }
-
 
 // Locações
 typedef struct {
@@ -493,15 +477,9 @@ void inserirLocacao(ListaLocacao *LL, LOCACAO X) {
     }
 }
 
-int cadastrarLocacao(ListaCliente *LC, ListaVeiculo *LV, CLIENTE /***/C, VEICULO /***/V, LOCACAO *L, int codLocacao) {
+int cadastrarLocacao(ListaCliente *LC, ListaVeiculo *LV, CLIENTE C, VEICULO V, LOCACAO *L, int codLocacao) {
     int i, indiceCli, indiceVeic;
     int sucessoLocacao = 0;
-
-    /*CLIENTE AC;
-    VEICULO AV;
-
-    AC = *C;
-    AV = *V;*/
 
     printf("\n=====> CADASTRAR LOCACAO <=====\n");
 
@@ -724,7 +702,6 @@ void removerLocacao(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL, CLIENT
     }
 }
 
-
 // Manutenções
 typedef struct {
     MANUTENCAO itemMan[MAX];
@@ -923,7 +900,6 @@ void removerManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO V, MANUTEN
         }
     }
 }
-
 
 // Interface do Usuário
 void menu() {
@@ -1223,7 +1199,6 @@ void switchCRUDManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO *V, MAN
 
 }
 
-
 // Estatísticas e Previsão de Faturamento
 void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL){
 
@@ -1291,7 +1266,6 @@ void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV, ListaLo
 
 }
 
-
 // Arquivos
 void gravarClientes (ListaCliente LC) {
     FILE *fp;
@@ -1300,7 +1274,7 @@ void gravarClientes (ListaCliente LC) {
         printf("\nErro ao gravar o arquivo.\n");
         return;
     } else {
-        printf("Arquivo binario criado com sucesso!\n");
+        //printf("Arquivo binario criado com sucesso!\n");
         fwrite(&LC, sizeof(ListaCliente), 1, fp);
     }
     fclose(fp);
@@ -1325,7 +1299,7 @@ void gravarVeiculos (ListaVeiculo LV) {
         printf("\nErro ao gravar o arquivo.\n");
         return;
     } else {
-        printf("Arquivo binario criado com sucesso!\n");
+        //printf("Arquivo binario criado com sucesso!\n");
         fwrite(&LV, sizeof(ListaVeiculo), 1, fp);
     }
     fclose(fp);
@@ -1350,7 +1324,7 @@ void gravarLocacoes (ListaLocacao LL) {
         printf("\nErro ao gravar o arquivo.\n");
         return;
     } else {
-        printf("Arquivo binario criado com sucesso!\n");
+        //printf("Arquivo binario criado com sucesso!\n");
         fwrite(&LL, sizeof(ListaLocacao), 1, fp);
     }
     fclose(fp);
@@ -1375,7 +1349,7 @@ void gravarManutencoes (ListaManutencao LM) {
         printf("\nErro ao gravar o arquivo.\n");
         return;
     } else {
-        printf("Arquivo binario criado com sucesso!\n");
+        //printf("Arquivo binario criado com sucesso!\n");
         fwrite(&LM, sizeof(ListaManutencao), 1, fp);
     }
     fclose(fp);
@@ -1393,10 +1367,9 @@ void carregarManutencoes(ListaManutencao *LM) {
     }
 }
 
-
 int main() {
 
-    int opcao;
+    int opcao, verificaMenu=0;
 
     CLIENTE C;
     VEICULO V;
@@ -1418,7 +1391,10 @@ int main() {
     carregarManutencoes(&LM);
 
     do {
+        if(verificaMenu==0){
         menu();
+        verificaMenu = 1;
+        }
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -1440,11 +1416,12 @@ int main() {
 
         case 5:
             estatisticasPrevisaoFaturamento(&LC, &LV, &LL);
+            verificaMenu = 0;
             break;
 
         case 6:
+            printf("\nTODAS AS ALTERACOES FORAM GRAVADAS COM SUCESSO!\n");
             printf("\nMUITO OBRIGADO POR USAR NOSSO SISTEMA!\n");
-            printf("\nDADOS GRAVADOS COM SUCESSO!\n");
             printf("\n------ Feito por AloCar Systems ------\n");
             gravarClientes(LC);
             gravarVeiculos(LV);

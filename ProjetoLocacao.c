@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
     SISTEMAS DE INFORMACAO - INF - UFG
     ALGORITMOS E ESTRUTURAS DE DADOS 1 - 2020-1
@@ -7,6 +8,18 @@
     201804676 -	LUCAS PEREIRA MATOS,
     201705645 - VINICIUS FERREIRA DE OLIVEIRA
     PROJETO FINAL - LOCADORA DE VEICULOS - ALOCAR SYSTEMS
+=======
+
+/*
+    SISTEMAS DE INFORMACAO - INF - UFG.
+    ALGORITMOS E ESTRUTURAS DE DADOS 1 - 2020-1.
+    PROFESSOR: EDMUNDO SERGIO SPOTO.
+    ALUNOS:
+    201700605 - JUNNO LUCIO L. G. JACOB,
+    201804676 -	LUCAS PEREIRA MATOS,
+    201705645 - VINICIUS FERREIRA DE OLIVEIRA.
+    PROJETO FINAL - LOCADORA DE VEICULOS - ALOCAR SYSTEMS.
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 */
 
 #include <stdio.h>
@@ -259,7 +272,11 @@ void removerCliente(ListaCliente *LC, CLIENTE *X) {
   }
 }
 
+<<<<<<< HEAD
 // VeÃ­culos
+=======
+// Veículos
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 typedef struct {
   VEICULO itemVeic[MAX];
   int prim, ult, tam;
@@ -290,10 +307,27 @@ void inserirVeiculo(ListaVeiculo *LV, VEICULO X) {
     if (i == LV->ult) {
       LV->itemVeic[i] = X;
     } else {
+<<<<<<< HEAD
       for (j = LV->ult; j > i; j--) {
         LV->itemVeic[j] = LV->itemVeic[j - 1];
       }
       LV->itemVeic[i] = X;
+=======
+        i = LV->prim;
+        while((i<LV->ult) && (X.codigo>LV->itemVeic[i].codigo)) {
+            i++;
+        }
+        if(i==LV->ult) {
+            LV->itemVeic[i] = X;
+        } else {
+            for(j=LV->ult; j>i; j--){
+                LV->itemVeic[j] = LV->itemVeic[j-1];
+            }
+            LV->itemVeic[i] = X;
+        }
+        LV->ult++;
+        LV->tam++;
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
     }
     LV->ult++;
     LV->tam++;
@@ -337,6 +371,10 @@ void cadastrarVeiculo(VEICULO *V, int codVeiculo) {
   V->valorTotal = 0.00;
   V->numStatus = 1;
   strcpy(V->status, "DISPONIVEL");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 }
 
 void exibirVeiculo(VEICULO V) {
@@ -425,6 +463,7 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
       printf("\nVEICULO COM A PLACA %s NAO ENCONTRADO!\n", X->placa);
     } else {
 
+<<<<<<< HEAD
       if (LV->itemVeic[i].numStatus == 1) {
         int op;
         VEICULO Y = LV->itemVeic[i];
@@ -447,6 +486,31 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
         } else {
           printf("\n\nVOLTANDO AO MENU!\n\n");
           system("pause");
+=======
+            if(LV->itemVeic[i].numStatus==1){
+                int op;
+                VEICULO Y = LV->itemVeic[i];
+
+                exibirVeiculo(Y);
+
+                //Verificação de Segurança:
+                printf("\nDESEJA REALMENTE REMOVER O CADASTRO DESTE VEICULO? (DIGITE '1' PARA SIM OU '2' PARA NAO)\n");
+                scanf("%d", &op);
+                if(op == 1) {
+                    *X = LV->itemVeic[i];
+                    for(j=i; j<LV->ult-1; j++) {
+                        LV->itemVeic[j] = LV->itemVeic[j+1];
+                    }
+                    LV->ult--;
+                    LV->tam--;
+                    printf("\n\nCADASTRO DE VEICULO REMOVIDO COM SUCESSO!\n\n");
+                } else {
+                    printf("\n\nVOLTANDO AO MENU!\n\n");
+                }
+            } else {
+                printf("\n\nNAO EH POSSIVEL REMOVER VEICULO COM STATUS RESERVADO OU EM MANUTENCAO\n\n");
+            }
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
         }
       } else {
         printf("\n\nNAO EH POSSIVEL REMOVER VEICULO COM STATUS RESERVADO OU EM "
@@ -457,7 +521,11 @@ void removerVeiculo(ListaVeiculo *LV, VEICULO *X) {
   }
 }
 
+<<<<<<< HEAD
 // LocaÃ§Ãµes
+=======
+// Locações
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 typedef struct {
   LOCACAO itemLoc[MAX];
   int prim, ult, tam;
@@ -499,6 +567,7 @@ void inserirLocacao(ListaLocacao *LL, LOCACAO X) {
   }
 }
 
+<<<<<<< HEAD
 int cadastrarLocacao(ListaCliente *LC, ListaVeiculo *LV, CLIENTE C, VEICULO V,
                      LOCACAO *L, int codLocacao) {
   int i, indiceCli, indiceVeic;
@@ -530,6 +599,13 @@ int cadastrarLocacao(ListaCliente *LC, ListaVeiculo *LV, CLIENTE C, VEICULO V,
       CLIENTE Y = LC->itemCli[i];
       L->cliente = Y;
       indiceCli = i;
+=======
+int cadastrarLocacao(ListaCliente *LC, ListaVeiculo *LV, CLIENTE C, VEICULO V, LOCACAO *L, int codLocacao) {
+    int i, indiceCli, indiceVeic;
+    int sucessoLocacao = 0;
+
+    printf("\n=====> CADASTRAR LOCACAO <=====\n");
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 
       printf("\nENTRE COM A PLACA DO VEICULO: \n");
       fflush(stdin);
@@ -750,7 +826,11 @@ void removerLocacao(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL,
   }
 }
 
+<<<<<<< HEAD
 // ManutenÃ§Ãµes
+=======
+// Manutenções
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 typedef struct {
   MANUTENCAO itemMan[MAX];
   int prim, ult, tam;
@@ -977,7 +1057,11 @@ void removerManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO V,
   }
 }
 
+<<<<<<< HEAD
 // Interface do UsuÃ¡rio
+=======
+// Interface do Usuário
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 void menu() {
   system("cls");
   printf("\n\n***** SEJA BEM-VINDO! *****\n\n");
@@ -1318,6 +1402,7 @@ void switchCRUDManutencao(ListaVeiculo *LV, ListaManutencao *LM, VEICULO *V,
   *LM = ALM;
 }
 
+<<<<<<< HEAD
 // EstatÃ­sticas e PrevisÃ£o de Faturamento
 void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV,
                                      ListaLocacao *LL) {
@@ -1327,6 +1412,10 @@ void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV,
   int qtdVeicTotal = 0, qtdVeicDisp = 0, qtdVeicLoc = 0, qtdVeicMan = 0;
   int qtdLocTotal = 0;
   float valorLocacoes = 0.0, despesaLocacoes = 0.0, lucroLocacoes = 0.0;
+=======
+// Estatísticas e Previsão de Faturamento
+void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV, ListaLocacao *LL){
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 
   qtdCliTotal = LC->tam;
   qtdVeicTotal = LV->tam;
@@ -1387,6 +1476,7 @@ void estatisticasPrevisaoFaturamento(ListaCliente *LC, ListaVeiculo *LV,
 }
 
 // Arquivos
+<<<<<<< HEAD
 void gravarClientes(ListaCliente LC) {
   FILE *fp;
   fp = fopen("arquivoClientes.dat", "wb");
@@ -1398,6 +1488,19 @@ void gravarClientes(ListaCliente LC) {
     fwrite(&LC, sizeof(ListaCliente), 1, fp);
   }
   fclose(fp);
+=======
+void gravarClientes (ListaCliente LC) {
+    FILE *fp;
+    fp = fopen("arquivoClientes.dat", "wb");
+    if(fp == NULL) {
+        printf("\nErro ao gravar o arquivo.\n");
+        return;
+    } else {
+        //printf("Arquivo binario criado com sucesso!\n");
+        fwrite(&LC, sizeof(ListaCliente), 1, fp);
+    }
+    fclose(fp);
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 }
 
 void carregarClientes(ListaCliente *LC) {
@@ -1412,6 +1515,7 @@ void carregarClientes(ListaCliente *LC) {
   }
 }
 
+<<<<<<< HEAD
 void gravarVeiculos(ListaVeiculo LV) {
   FILE *fp;
   fp = fopen("arquivoVeiculos.dat", "wb");
@@ -1423,6 +1527,19 @@ void gravarVeiculos(ListaVeiculo LV) {
     fwrite(&LV, sizeof(ListaVeiculo), 1, fp);
   }
   fclose(fp);
+=======
+void gravarVeiculos (ListaVeiculo LV) {
+    FILE *fp;
+    fp = fopen("arquivoVeiculos.dat", "wb");
+    if(fp == NULL) {
+        printf("\nErro ao gravar o arquivo.\n");
+        return;
+    } else {
+        //printf("Arquivo binario criado com sucesso!\n");
+        fwrite(&LV, sizeof(ListaVeiculo), 1, fp);
+    }
+    fclose(fp);
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 }
 
 void carregarVeiculos(ListaVeiculo *LV) {
@@ -1437,6 +1554,7 @@ void carregarVeiculos(ListaVeiculo *LV) {
   }
 }
 
+<<<<<<< HEAD
 void gravarLocacoes(ListaLocacao LL) {
   FILE *fp;
   fp = fopen("arquivoLocacoes.dat", "wb");
@@ -1448,6 +1566,19 @@ void gravarLocacoes(ListaLocacao LL) {
     fwrite(&LL, sizeof(ListaLocacao), 1, fp);
   }
   fclose(fp);
+=======
+void gravarLocacoes (ListaLocacao LL) {
+    FILE *fp;
+    fp = fopen("arquivoLocacoes.dat", "wb");
+    if(fp == NULL) {
+        printf("\nErro ao gravar o arquivo.\n");
+        return;
+    } else {
+        //printf("Arquivo binario criado com sucesso!\n");
+        fwrite(&LL, sizeof(ListaLocacao), 1, fp);
+    }
+    fclose(fp);
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 }
 
 void carregarLocacoes(ListaLocacao *LL) {
@@ -1462,6 +1593,7 @@ void carregarLocacoes(ListaLocacao *LL) {
   }
 }
 
+<<<<<<< HEAD
 void gravarManutencoes(ListaManutencao LM) {
   FILE *fp;
   fp = fopen("arquivoManutencoes.dat", "wb");
@@ -1473,6 +1605,19 @@ void gravarManutencoes(ListaManutencao LM) {
     fwrite(&LM, sizeof(ListaManutencao), 1, fp);
   }
   fclose(fp);
+=======
+void gravarManutencoes (ListaManutencao LM) {
+    FILE *fp;
+    fp = fopen("arquivoManutencoes.dat", "wb");
+    if(fp == NULL) {
+        printf("\nErro ao gravar o arquivo.\n");
+        return;
+    } else {
+        //printf("Arquivo binario criado com sucesso!\n");
+        fwrite(&LM, sizeof(ListaManutencao), 1, fp);
+    }
+    fclose(fp);
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 }
 
 void carregarManutencoes(ListaManutencao *LM) {
@@ -1489,7 +1634,72 @@ void carregarManutencoes(ListaManutencao *LM) {
 
 int main() {
 
+<<<<<<< HEAD
   int opcao, verificaMenu = 0;
+=======
+    int opcao, verificaMenu=0;
+
+    CLIENTE C;
+    VEICULO V;
+    LOCACAO L;
+    MANUTENCAO M;
+    ListaCliente LC;
+    ListaVeiculo LV;
+    ListaLocacao LL;
+    ListaManutencao LM;
+
+    /*criarListaCliente(&LC);
+    criarListaVeiculo(&LV);
+    criarListaLocacao(&LL);
+    criarListaManutencao(&LM);*/
+
+    carregarClientes(&LC);
+    carregarVeiculos(&LV);
+    carregarLocacoes(&LL);
+    carregarManutencoes(&LM);
+
+    do {
+        if(verificaMenu==0){
+        menu();
+        verificaMenu = 1;
+        }
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+        case 1:
+            switchCRUDCliente(&LC, &C);
+            break;
+
+        case 2:
+            switchCRUDVeiculo(&LV, &V);
+            break;
+
+        case 3:
+            switchCRUDLocacao(&LC, &LV, &LL, &C, &V, &L);
+            break;
+
+        case 4:
+            switchCRUDManutencao(&LV, &LM, &V, &M);
+            break;
+
+        case 5:
+            estatisticasPrevisaoFaturamento(&LC, &LV, &LL);
+            verificaMenu = 0;
+            break;
+
+        case 6:
+            printf("\nTODAS AS ALTERACOES FORAM GRAVADAS COM SUCESSO!\n");
+            printf("\nMUITO OBRIGADO POR USAR NOSSO SISTEMA!\n");
+            printf("\n------ Feito por AloCar Systems ------\n");
+            gravarClientes(LC);
+            gravarVeiculos(LV);
+            gravarLocacoes(LL);
+            gravarManutencoes(LM);
+            break;
+        default:
+            printf("\nENTRADA INVALIDA: Selecione apenas uma das opcoes apresentadas! (1 a 6)\n");
+        }
+>>>>>>> 148b1a66cfaf78c9d83a9708c87f04cc35631fb5
 
   CLIENTE C;
   VEICULO V;
